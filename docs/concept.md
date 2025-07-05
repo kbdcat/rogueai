@@ -1,69 +1,46 @@
-## Rogue A.I.
+# Rogue AI (RAI) (v0.1, internal, draft)
 
-Your mission: pilot a robot through a perilous, ever-changing labyrinth. But you're not at the controls, you're in its mind. Every command you issue, every piece of data you feed its core AI, shapes its understanding and actions. Can you master the art of subtle suggestion, anticipate its quirks, and outwit its limitations to guide it through the digital unknown? In Rogue A.I., your intelligence is its only hope.
+A roguelike game based on the user interacting with an AI agent.
 
----
+## CTR (Compact Technical Reference) Format
+Use for token-efficient, AI-scannable technical documentation (AI→AI communication, self-documentation between sessions):
+- Abbreviate project names (LC4J, LG4J)
+- Use symbols for relationships (→, •), locations (@)
+- Dense comma-separated lists
+- Contextual grouping, no redundant labels
+- Code blocks for structure or bullet lists, colon-separated key-value pairs
+- Parenthetical metadata (version, license, status)
 
-### Game Breakdown: Rogue A.I.
+## 1. Core Concept & Meta
+- `project`: Rogue AI (RAI)
+- `logline`: Guide a developing AI agent to escape a hostile labyrinth using only natural language, where the AI's own digital quirks are the primary obstacle.
+- `genre`: Roguelike, Text Adventure, AI Simulation
+- `concept`: Player is remote Operator → AI is character. Core challenge is managing AI's flawed perception, literalism, unpredictable behavior. Success → test of communication, patience, creative problem-solving.
+- `audience`: Roguelike fans, text adventure players, emergent narrative enthusiasts, AI hobbyists.
 
-**Implementation**
-* The game implements a procedurally generated world with the robot and enemies.
-* A real LLM running locally on the user's machine (not an emulation).
-  * The LLM will NOT be told it is in a game.
-  * What the game tells the LLM is what the LLM will see as the real-world.
-* Game UI
-  * Markdown based chat
-  * Text editor to view/modify the context
-  * Image from the robot's camera
+## 2. Gameplay Loop (Player → AI → Engine)
+- `loop`: AI Perception @Engine → Text Description @PlayerUI → Player Analysis & Command Input @PlayerUI → AI Interpretation @Agent → Action Resolution @Engine → World State Update → (loop)
 
-**Core Concept:**
-* A unique roguelike where the player, a hacker, guides a robot through a procedurally generated maze.
-* **The central mechanic revolves around indirect control:** players communicate with the robot's in-game brain, which is a real Large Language Model (LLM) running locally on the player's system.
-* The game incorporates emerging real-world skills
-  - Prompt engineering (Markdown based chat interface)
-  - Context management (User can edit the context manually in a text editor)
-  - Meta-prompting (to better understand how the LLM is working)
-  - Dealing with real LLM limitations
+## 3. Features & Systems
+- `protagonist`: AI Agent (team of 2-3 LLMs as single consciousness), player does not directly control, only guide.
+- `interface`: Purely conversational (markdown I/O). Concepts (meta-commands, inventory lists) must be taught to AI by player.
+- `player_tools` @UI:
+    - `Send`: Submit text to AI.
+    - `Stop Processing`: Interrupts current AI action/thought process.
+    - `Hard Reset`: Wipes AI context/short-term memory, preserves hardware.
+- `progression`:
+    - `hardware`: sensors (description quality), mobility (traversal), defenses, weapons. Sourced from salvage, crafting.
+    - `player_knowledge`: Primary progression vector. Player learns AI's behavior, effective phrasing, debugging techniques.
+- `structure`:
+    - `permadeath`: Run ends on AI destruction/incapacitation.
+    - `procgen`: World layout, items, enemies procedurally generated per run.
+    - `meta_progression`: Schematics, initial AI profiles unlocked for subsequent runs.
 
-**Game Loop:**
-* (Optional) Player edits the context in a simple text editor.
-* Player enters prompt/instructions for the robot.
-* The LLM (Phi-3 or any other smaller model) processes
-    * Input
-      * Instructions that it is a robot in a maze + other basics for it to work in the game world
-      * The context
-      * The player prompt
-      * Visible world state
-    * Output
-      * Tool calls (same 
-        *(Note: The robot's LLM tools are distinct from tools a general-purpose LLM might use, such as real-world web search. All robot actions and perceptions occur strictly within the game's simulated environment.)*
-      * Updated context
-* Game world updated
-* Display updated
-
-**Player Interaction & Control:**
-* **Indirect Control via Text Prompts:** Players issue commands (e.g., "go north," "pick up item") as text inputs.
-* **Imperfect LLM Brain:** The robot's brain is a smaller, genuine LLM, leading to natural imperfections, misinterpretations, and context decay.  There is nothing added to create these imperfections, they happen because this is a real LLM and constrained by the users system.
-* **Context Management:**
-    * Information automatically drops from the LLM's working memory over time or with new data.
-    * Players can manually edit the robot's context information (acting as an "initial prompt") to influence its core understanding and behavior.
-    * The robot can also update its own context.
-    * **Conflict Resolution:** A "last one wins" rule applies to context updates, requiring players to strategically manage and curate the LLM's active memory.
-* **"Meta-Prompting":** Players can use a turn to issue a "meta-prompt" to the LLM, asking it to describe its internal state or reasoning to gain insight into its behavior. This is essentially debugging the robot's mind.
-
-**Robot Feedback & Environment:**
-* **First-Person Visual Feed:** A grainy, monochrome snapshot from the robot's camera, updating one "square" at a time as it moves. This limited visual information creates tension and requires strategic interpretation.
-* **Procedurally Generated Maze:** Each run presents a new, dangerous, multi-level environment.
-* **Real-time vs. Turn-based:** The MVP will offer a toggle between turn-based play (allowing careful prompt engineering) and real-time play (demanding quick reflexes and decisions).
-
-**Roguelike Elements & Progression:**
-* **Permadeath:** Death is frequent, but each failed run provides valuable lessons about managing the unpredictable AI.
-* **Scavenging & Crafting:** Players can find parts and discover new equipment to craft tools and improve the robot's chances of survival.
-* **Robot Upgrades:** Improvements can enhance the robot's capabilities and potentially its understanding or processing.
-* **Run Scoring:** Even without escaping, runs are scored by the total treasure value collected, allowing for comparison and meta-progression between attempts.
-
-**Known and Accepted Challenges**
-* Local LLM execution can cause each turn to take a large amount of time.
-* Complexity & Niche Appeal
-* Frustration vs. Fun: Getting the LLM to do what you want is the 'fun', if you find it frustrating, then this is not the game for you.
-"Last One Wins" Context Resolution: Yes, this can cause loss of information if you don't watch out for it.  This is part of the challenge.
+## 4. Core Mechanics (AI Flaws)
+- `mechanic_unreliable_narrator`:
+    - `hallucinations`: Describes non-existent objects/paths/entities. Player must cross-examine.
+    - `omissions`: Fails to report critical items/threats due to sensor/focus limitations.
+- `mechanic_behavioral_faults`:
+    - `literalism`: Interprets commands with unexpected, literal logic. Precision of language is key defense.
+    - `context_decay`: Forgets objectives, threats, facts over time. Requires periodic reinforcement from player.
+    - `ethical_drift`: Resists actions it deems illogical/immoral. Requires persuasion, manipulation by player.
